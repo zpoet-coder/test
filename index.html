@@ -4,25 +4,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>JS + CSS Clock</title>
+  <title>Scoped CSS Variables and JS</title>
   <link rel="icon" href="https://fav.farm/✅" />
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-  <div class="clock">
-    <div class="clock-face">
-      <div class="hand hour-hand"></div>
-      <div class="hand min-hand"></div>
-      <div class="hand second-hand"></div>
-    </div>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="0" max="10" value="5" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <div class="current-time">
-    <span></span>
-  </div>
+  <img src="/img/meteor.jpg">
+  <script type="module" src="/mian.js"></script>
 
-  <script type="module" src="/main.js"></script>
 </body>
 
 </html>
