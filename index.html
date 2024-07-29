@@ -34,11 +34,13 @@
       "detail_dynasty": "现代"
     }
 
+    // 把loveQiQi插入到数组的第52项
     const poetrys = [];
     fetch(endpoint)
       .then(blob => blob.json())
       .then(data => {
-        poetrys.push(...data, loveQiQi)
+        poetrys.push(...data)
+        poetrys.splice(51, 0, loveQiQi);
         console.log(poetrys)
       });
 
