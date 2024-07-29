@@ -3,29 +3,82 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Scoped CSS Variables and JS</title>
-  <link rel="icon" href="https://fav.farm/✅" />
-  <link rel="stylesheet" href="/style.css">
+  <title>Ajax Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
 
-  <div class="controls">
-    <label for="spacing">Spacing:</label>
-    <input id="spacing" type="range" name="spacing" min="0" max="10" value="5" data-sizing="px">
+  <form class="search-form">
+    <input type="text" class="search" placeholder="诗句 诗名 诗人">
+    <ul class="suggestions">
+      <li>输入词句，找一首诗</li>
+      <li></li>
+    </ul>
+  </form>
+  <script>
+    // const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-    <label for="blur">Blur:</label>
-    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+    const endpoint = 'https://gist.githubusercontent.com/soyaine/81399bb2b24ca1bb5313e1985533c640/raw/bdf7df2cbcf70706c4a5e51a7dfb8c933ed78878/TangPoetry.json';
 
-    <label for="base">Base Color</label>
-    <input id="base" type="color" name="base" value="#ffc600">
-  </div>
+    const loveQiQi = {
+      "detail_text": "我爱你",
+      "title": "周家琪",
+      "detail_translate_text": [
+      ],
+      "detail_translate_note_text_title": [
+      ],
+      "detail_author": [
+        "朱海滨"
+      ],
+      "detail_dynasty": "现代"
+    }
 
-  <img src="/img/meteor.jpg">
-  <script type="module" src="/mian.js"></script>
+    const poetrys = [];
+    fetch(endpoint)
+      .then(blob => blob.json())
+      .then(data => {
+        poetrys.push(...data, loveQiQi)
+        console.log(poetrys)
+      });
 
+    function findMatches(wordToMatch, poetrys) {
+      return poetrys.filter(poet => {
+        // 正则找出匹配的诗句
+        const regex = new RegExp(wordToMatch, 'gi');
+        const author = poet.detail_author.join('');
+        //			console.log(author);
+        return poet.detail_text.match(regex) || poet.title.match(regex) || author.match(regex);
+      });
+    }
+
+    function displayMatches() {
+      const matches = findMatches(this.value, poetrys);
+      const regex = new RegExp(this.value, 'gi');
+      const html = matches.map(poet => {
+        // 替换高亮的标签
+        const text = poet.detail_text.replace(regex, `<span class="hl">${this.value}</span>`);
+        const title = poet.title.replace(regex, `<span class="hl">${this.value}</span>`)
+        // 构造 HTML 值
+        return `
+				<li>
+					<span class="poet">${text}</span>
+					<span class="title">${title} - ${poet.detail_author[0]}</span>
+				</li>
+			`;
+      }).join('');
+      //		console.log(html);
+      suggestions.innerHTML = html;
+    }
+
+    const search = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    search.addEventListener('change', displayMatches);
+    search.addEventListener('keyup', displayMatches);
+
+    //	console.log(poetrys);
+  </script>
 </body>
 
 </html>
